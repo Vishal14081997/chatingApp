@@ -1,10 +1,51 @@
 import React from "react";
 import { IoArrowBackCircleOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { API_BASE_URL } from "../api/config";
+import { useEffect } from "react";
+import { useState } from "react";
 
 const Profile = () => {
-  const navigate = useNavigate();
 
+  const [formData, setFormData] = useState({
+    fullName: "", email: "", profilePic: ""
+  })
+  const [loading, setLoading] = useState(true)
+
+  const navigate = useNavigate();
+  const token = localStorage.getItem("token")
+
+  const fetchProfile = async () => {
+    try {
+      setLoading(true)
+      // await new Promise((resolve) => {
+      //   setTimeout(resolve, 3000)
+      // })
+      const res = await axios.get(`${API_BASE_URL}/api/getProfile`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      console.log(res.data);
+      setFormData(res.data.user)
+
+    } catch (error) {
+      console.log(error.response);
+    } finally {
+      setLoading(false)
+    }
+  }
+  useEffect(() => {
+    fetchProfile()
+  }, [])
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="w-15 h-15 border-4 border-primary rounded-full border-t-transparent animate-spin"></div>
+      </div>
+    );
+  }
   return (
     <div className="flex flex-col h-full bg-gray-100">
       {/* Header */}
@@ -29,8 +70,8 @@ const Profile = () => {
           />
         </label>
 
-        <p className="text-white font-medium">Vishal Singh</p>
-        <p className="text-white/70 text-sm">vishal@gmail.com</p>
+        <p className="text-white font-medium">{formData.fullName}</p>
+        <p className="text-white/70 text-sm">{formData.email}</p>
       </div>
 
       {/* Form Section */}
@@ -48,6 +89,7 @@ const Profile = () => {
               <input
                 type="text"
                 placeholder="Enter Full Name"
+                value={formData.fullName}
                 className="border border-gray-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-[#00BFA5]"
               />
             </div>
@@ -59,6 +101,7 @@ const Profile = () => {
               <input
                 type="email"
                 placeholder="Enter Email"
+                value={formData.email}
                 className="border border-gray-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-[#00BFA5]"
               />
             </div>

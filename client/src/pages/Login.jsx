@@ -1,13 +1,14 @@
 import axios from "axios";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
-import {API_BASE_URL} from "../api/config"
-import { Link } from "react-router-dom";
+import { API_BASE_URL } from "../api/config"
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
-
+  const navigate = useNavigate()
+  
   const handleChange = (e) => {
     // console.log(e.target.name , e.target.value);
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -19,12 +20,13 @@ const Login = () => {
     }
     try {
       setLoading(true);
-      const res = await axios.post(`${API_BASE_URL}/api/login`, formData );
+      const res = await axios.post(`${API_BASE_URL}/api/login`, formData);
       console.log(res.data.data.token);
       const token = res.data.data.token;
-      localStorage.setItem("token" , token)
+      localStorage.setItem("token", token)
       toast.success(res.data.message);
       setFormData({ email: "", password: "" });
+      navigate("/chat")
     } catch (error) {
       console.log(error.response);
       toast.error(error.response?.data?.message);
@@ -81,7 +83,7 @@ const Login = () => {
         </button>
 
         <p className="text-center text-[14px] text-gray-600">
-          Don't have an account? ? <Link to={"/signup"} className="font-medium text-primary" >Sign up</Link> 
+          Don't have an account? ? <Link to={"/signup"} className="font-medium text-primary" >Sign up</Link>
         </p>
 
         <button className="flex justify-center items-center border border-gray-500 rounded-full py-2">

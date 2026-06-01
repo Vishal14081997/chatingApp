@@ -59,13 +59,26 @@ const getProfile = async (req, res) => {
         const userId = req.user._id;
         const getUser = await User.findById(userId).select("-password");
         res.status(200).json({
-            message: "this is Profile page ",
+            message: " Get Profile",
             user: getUser
         });
     } catch (error) {
         res.status(500).json({ message: "server error" })
     }
 };
+const updateProfile = async (req, res) => {
+    try {
+        const userId = req.user._id
+        const updateUser = await User.findByIdAndUpdate(userId ,req.body, {new:true})
+
+        res.status(200).json({
+            message: "Profile update successfully",
+            data: updateUser
+        })
+    } catch (error) {
+
+    }
+}
 const getAllContacts = async (req, res) => {
     try {
         const logingUserId = req.user._id;
@@ -81,4 +94,5 @@ const getAllContacts = async (req, res) => {
     }
 }
 
-module.exports = { signUp, login, getProfile, getAllContacts };
+
+module.exports = { signUp, login, getProfile, getAllContacts,updateProfile };

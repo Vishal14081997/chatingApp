@@ -40,6 +40,12 @@ const MainLayout = () => {
             groupIcon: "A",
             groupName:"MyGroup",
             participants: "1"
+        },
+        {
+            _id: "2",
+            groupIcon: "A",
+            groupName:"MyGroup",
+            participants: "1"
         }
     ]
     const fetchContacts = async () => {
@@ -88,7 +94,7 @@ const MainLayout = () => {
                         onClick={() => setActiveTab("chats")}
                         className={`flex-1 py-2 text-sm font-medium transition
               ${activeTab === "chats"
-                                ? "text-[#075E54] border-b-2 border-[#075E54]"
+                                ? "text-primary border-b-2 border-primary"
                                 : "text-gray-500"
                             }`}
                     >

@@ -93,6 +93,18 @@ const getAllContacts = async (req, res) => {
 
     }
 }
+const imageupload = async (req, res) => {
+    try {
+        console.log(req.file)
+        
+        res.status(200).json({
+            message: "image upload",
+            file:req.file
+        })
+    } catch (error) {
+
+    }
+}
 
 
-module.exports = { signUp, login, getProfile, getAllContacts,updateProfile };
+module.exports = { signUp, login, getProfile, getAllContacts,updateProfile ,imageupload };

@@ -10,7 +10,7 @@ router.post("/signup" , signUp)
 router.post("/login" , login)
 router.get("/getProfile" ,verifyToken,  getProfile)
 router.get("/getAllContacts" ,verifyToken,  getAllContacts)
-router.put("/updateProfile" ,verifyToken,  updateProfile)
+router.put("/updateProfile" ,verifyToken, upload.single("profileImage"),uploadToCloudinary, updateProfile)
 router.post("/imageupload" ,upload.single("file") ,uploadToCloudinary ,imageupload )
 
 

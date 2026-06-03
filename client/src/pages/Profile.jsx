@@ -12,6 +12,7 @@ const Profile = () => {
     fullName: "", email: "", profilePic: ""
   })
   const [loading, setLoading] = useState(true)
+  const [selectedImage, setSelectedImage] = useState(null)
 
   const navigate = useNavigate();
   const token = localStorage.getItem("token")
@@ -19,9 +20,6 @@ const Profile = () => {
   const fetchProfile = async () => {
     try {
       setLoading(true)
-      // await new Promise((resolve) => {
-      //   setTimeout(resolve, 3000)
-      // })
       const res = await axios.get(`${API_BASE_URL}/api/getProfile`, {
         headers: {
           Authorization: `Bearer ${token}`
@@ -35,6 +33,27 @@ const Profile = () => {
     } finally {
       setLoading(false)
     }
+  }
+  const handleUpdateProfile = async () => {
+    try {
+      const data = new FormData();
+      data.append("fullName", formData.fullName)
+      data.append("email", formData.email)
+      if (selectedImage) {
+        data.append("profileImage", selectedImage)
+      }
+      const res = await axios.put(`${API_BASE_URL}/api/updateProfile`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      console.log(res.data);
+    } catch (error) {
+      console.log(error.response);
+    }
+  }
+  const handleChange = (e) => {
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }))
   }
   useEffect(() => {
     fetchProfile()
@@ -88,8 +107,10 @@ const Profile = () => {
               </label>
               <input
                 type="text"
+                name="fullName"
                 placeholder="Enter Full Name"
                 value={formData.fullName}
+                onChange={handleChange}
                 className="border border-gray-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-[#00BFA5]"
               />
             </div>
@@ -100,6 +121,8 @@ const Profile = () => {
               </label>
               <input
                 type="email"
+                name="email"
+                onChange={handleChange}
                 placeholder="Enter Email"
                 value={formData.email}
                 className="border border-gray-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-[#00BFA5]"
@@ -109,7 +132,9 @@ const Profile = () => {
         </div>
 
         {/* Update Button */}
-        <button className="bg-primary text-white rounded-full py-3 text-sm font-medium">
+        <button
+          onClick={handleUpdateProfile}
+          className="bg-primary text-white rounded-full py-3 text-sm font-medium">
           Update Profile
         </button>
 

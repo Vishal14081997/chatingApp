@@ -10,7 +10,7 @@ const uploadToCloudinary = async(req ,res,next)=>{
         })
         console.log("result",result);
         req.public_id = result.public_id;
-        req.secure_url = result.secure_url
+        req.imageUrl = result.secure_url
         next()
     } catch (error) {
         console.log("cloudinary error", error.message);

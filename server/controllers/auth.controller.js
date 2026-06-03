@@ -43,7 +43,7 @@ const login = async (req, res) => {
             email: user.email,
         };
         const token = jwt.sign(payload, process.env.JWT_SECRET, {
-            expiresIn: "1d",
+            expiresIn: "365d",
         });
 
         res.status(200).json({
@@ -69,7 +69,19 @@ const getProfile = async (req, res) => {
 const updateProfile = async (req, res) => {
     try {
         const userId = req.user._id
-        const updateUser = await User.findByIdAndUpdate(userId ,req.body, {new:true})
+
+        const updateData = {...req.body}
+
+        if (req.fullName) {
+            updateData.fullName = req.body.fullName
+        }
+        if (req.email) {
+            updateData.email = req.body.email
+        }
+        if (req.imageUrl) {
+            updateData.profilePic = req.imageUrl
+        }
+        const updateUser = await User.findByIdAndUpdate(userId, updateData, { new: true })
 
         res.status(200).json({
             message: "Profile update successfully",
@@ -96,10 +108,11 @@ const getAllContacts = async (req, res) => {
 const imageupload = async (req, res) => {
     try {
         console.log(req.file)
-        
+
         res.status(200).json({
             message: "image upload",
-            file:req.file
+            file: req.file,
+            image: req.imageUrl
         })
     } catch (error) {
 
@@ -107,4 +120,4 @@ const imageupload = async (req, res) => {
 }
 
 
-module.exports = { signUp, login, getProfile, getAllContacts,updateProfile ,imageupload };
+module.exports = { signUp, login, getProfile, getAllContacts, updateProfile, imageupload };

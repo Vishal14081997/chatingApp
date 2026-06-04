@@ -16,6 +16,12 @@ app.use(cors())
 
 app.use("/api", authRoute )
 
+app.get("/", (req, res) => {
+  res.json({
+    message: "Server is running"
+  });
+});
+
 app.listen(PORT, ()=>{
     console.log(`server is running port ${PORT}`); 
     dbConnect()

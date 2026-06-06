@@ -7,57 +7,68 @@ import { useEffect } from "react";
 import { useState } from "react";
 
 const Profile = () => {
-
   const [formData, setFormData] = useState({
-    fullName: "", email: "", profilePic: ""
-  })
-  const [loading, setLoading] = useState(true)
-  const [selectedImage, setSelectedImage] = useState(null)
+    fullName: "",
+    email: "",
+    profilePic: "",
+  });
+  const [loading, setLoading] = useState(true);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const navigate = useNavigate();
-  const token = localStorage.getItem("token")
+  const token = localStorage.getItem("token");
 
   const fetchProfile = async () => {
     try {
-      setLoading(true)
+      setLoading(true);
       const res = await axios.get(`${API_BASE_URL}/api/getProfile`, {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
+          Authorization: `Bearer ${token}`,
+        },
+      });
       console.log(res.data);
-      setFormData(res.data.user)
-
+      setFormData(res.data.user);
     } catch (error) {
       console.log(error.response);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
   const handleUpdateProfile = async () => {
     try {
       const data = new FormData();
-      data.append("fullName", formData.fullName)
-      data.append("email", formData.email)
+      data.append("fullName", formData.fullName);
+      data.append("email", formData.email);
       if (selectedImage) {
-        data.append("profileImage", selectedImage)
+        data.append("profileImage", selectedImage);
       }
       const res = await axios.put(`${API_BASE_URL}/api/updateProfile`, data, {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
+          Authorization: `Bearer ${token}`,
+        },
+      });
       console.log(res.data);
     } catch (error) {
       console.log(error.response);
     }
-  }
+  };
   const handleChange = (e) => {
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+  const handleImageChange = (e) => {
+    console.log(e.target.files);
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedImage(file);
+    }
+  };
+  const handleLogout = () => {
+    localStorage.clear()
+    navigate("/login")
   }
   useEffect(() => {
-    fetchProfile()
-  }, [])
+    fetchProfile();
+  }, []);
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -80,12 +91,24 @@ const Profile = () => {
       {/* Profile Header */}
       <div className="bg-primary pb-8 pt-4 flex flex-col items-center">
         <label className="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center cursor-pointer overflow-hidden mb-3">
-          <span className="text-white text-3xl font-medium">V</span>
-
+          {selectedImage || formData.profilePic ? (
+            <img
+              src={
+                selectedImage
+                  ? URL.createObjectURL(selectedImage)
+                  : formData.profilePic
+              }
+            />
+          ) : (
+            <span className="text-white text-3xl font-medium">
+              {formData.fullName.charAt(0).toUpperCase()}
+            </span>
+          )}
           <input
             type="file"
             accept="image/*"
             className="hidden"
+            onChange={handleImageChange}
           />
         </label>
 
@@ -102,9 +125,7 @@ const Profile = () => {
 
           <div className="flex flex-col gap-3">
             <div className="flex flex-col gap-1">
-              <label className="text-xs text-gray-500">
-                Full Name
-              </label>
+              <label className="text-xs text-gray-500">Full Name</label>
               <input
                 type="text"
                 name="fullName"
@@ -116,9 +137,7 @@ const Profile = () => {
             </div>
 
             <div className="flex flex-col gap-1">
-              <label className="text-xs text-gray-500">
-                Email
-              </label>
+              <label className="text-xs text-gray-500">Email</label>
               <input
                 type="email"
                 name="email"
@@ -134,12 +153,15 @@ const Profile = () => {
         {/* Update Button */}
         <button
           onClick={handleUpdateProfile}
-          className="bg-primary text-white rounded-full py-3 text-sm font-medium">
+          className="bg-primary text-white rounded-full py-3 text-sm font-medium"
+        >
           Update Profile
         </button>
 
         {/* Logout Button */}
-        <button className="bg-red-500 text-white rounded-full py-3 text-sm font-medium">
+        <button
+          onClick={handleLogout}
+          className="bg-red-500 text-white rounded-full py-3 text-sm font-medium">
           Logout
         </button>
       </div>

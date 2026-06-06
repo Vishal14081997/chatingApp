@@ -33,7 +33,11 @@ const login = async (req, res) => {
         }
         const user = await User.findOne({ email });
         // console.log(user);
-
+        if (!user) {
+            return res.status(404).json({
+                message: "user not found"
+            })
+        }
         if (user.password !== password) {
             return res.status(400).json({ message: "password is increate" });
         }
@@ -70,7 +74,7 @@ const updateProfile = async (req, res) => {
     try {
         const userId = req.user._id
 
-        const updateData = {...req.body}
+        const updateData = { ...req.body }
 
         if (req.fullName) {
             updateData.fullName = req.body.fullName

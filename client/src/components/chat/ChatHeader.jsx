@@ -1,9 +1,32 @@
 import { IoArrowBackCircleOutline } from "react-icons/io5";
-import { useNavigate } from "react-router-dom";
+import { useFetcher, useNavigate, useParams } from "react-router-dom";
+import { useSocket } from "../../context/SocketContext"
+import axios from "axios";
+import { API_BASE_URL } from "../../api/config";
+import { useEffect } from "react";
 
 const ChatHeader = () => {
+  const { token, socketConnected, onlineUsers } = useSocket()
   const navigate = useNavigate();
+  const { userId } = useParams()
 
+  const fetchUser = async () => {
+    try {
+      const res = await axios.get(`${API_BASE_URL}/api/users/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      console.log(res.data);
+
+    } catch (error) {
+      console.log(error.response);
+
+    }
+  }
+  useEffect(() => {
+    fetchUser()
+  }, [userId])
   return (
     <div className="px-4 py-3 bg-[#075E54] flex items-center gap-3">
       <button

@@ -2,6 +2,7 @@ const express = require("express")
 const dotenv = require("dotenv")
 const dbConnect = require("./config/db")
 const authRoute = require("./routes/auth.route")
+const messageRoute = require("./routes/message.route")
 const cors = require("cors")
 const {initSocket} = require("./services/socket")
 
@@ -19,6 +20,7 @@ app.use(express.json())
 app.use(cors())
 
 app.use("/api", authRoute)
+app.use("/api", messageRoute)
 
 app.get("/", (req, res) => {
   res.json({

@@ -3,6 +3,7 @@ import { FaMicrophone } from "react-icons/fa";
 import { BsEmojiSmile } from "react-icons/bs";
 
 const InputBar = () => {
+
   return (
     <div className="bg-[#F0F0F0] px-3 py-4 flex items-center gap-2 border-t border-gray-200">
       

@@ -1,20 +1,33 @@
 const cloudinary = require("../config/cloudinary");
 
-const uploadToCloudinary = async(req ,res,next)=>{
+const uploadToCloudinary = async (req, res, next) => {
     try {
-        if(!req.file){
-           return next()
+        if (!req.files) {
+            return next()
         }
-        const result = await cloudinary.uploader.upload(req.file.path,{
-           folder:"chatingApp" 
-        })
-        // console.log("result",result);
-        // req.public_id = result.public_id;
-        req.imageUrl = result.secure_url
+        req.imageUrl = []
+        req.videoUrl = []
+        req.audioUrl = []
+        for (const file of req.files) {
+            const result = await cloudinary.uploader.upload(file.path, {
+                resource_type: "auto",
+                folder: "chatingApp"
+            });
+            // console.log("file", file);
+            if (file.mimetype.startsWith("image")) {
+                req.imageUrl.push(result.secure_url)
+            }
+            if (file.mimetype.startsWith("video")) {
+                req.videoUrl.push(result.secure_url)
+            }
+            if (file.mimetype.startsWith("audio")) {
+                req.audioUrl.push(result.secure_url)
+            }
+        }
         next()
     } catch (error) {
         console.log("uploadToCloudinary", error.message);
-        res.status(500).json({message:"cloudinary error"})
+        res.status(500).json({ message: "cloudinary error" })
     }
 }
 module.exports = uploadToCloudinary

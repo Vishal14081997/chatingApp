@@ -72,4 +72,4 @@ const getMessage = async (req, res) => {
     }
 };
 
-module.exports = { getUserById, sendMessage,getMessage };
+module.exports = { getUserById, sendMessage, getMessage };

@@ -21,9 +21,13 @@ const Login = () => {
     try {
       setLoading(true);
       const res = await axios.post(`${API_BASE_URL}/api/login`, formData);
-      console.log(res.data.data.token);
+      // console.log(res.data.data.token);
+
       const token = res.data.data.token;
       localStorage.setItem("token", token)
+      localStorage.setItem("user" ,JSON.stringify(res.data.data))
+
+     
       toast.success(res.data.message);
       setFormData({ email: "", password: "" });
       navigate("/chat")

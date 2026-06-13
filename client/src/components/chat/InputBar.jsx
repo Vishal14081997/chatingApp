@@ -8,7 +8,7 @@ import { useParams } from "react-router-dom";
 import { IoSend } from "react-icons/io5";
 import { useRef, useState } from "react";
 
-const InputBar = () => {
+const InputBar = ({ setMessages }) => {
   const [fileUrl, setFileUrl] = useState([]);
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
@@ -35,6 +35,7 @@ const InputBar = () => {
         },
       );
       console.log(res.data.data);
+      setMessages((prev) => [...prev, res.data.data]);
       setText("");
       setFileUrl([]);
     } catch (error) {

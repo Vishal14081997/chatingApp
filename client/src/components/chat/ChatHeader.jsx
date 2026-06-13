@@ -11,7 +11,7 @@ const ChatHeader = () => {
   const { token, socketConnected, onlineUsers } = useSocket()
   const navigate = useNavigate();
   const { userId } = useParams()
-  console.log(onlineUsers);
+  // console.log(onlineUsers);
   const fetchUser = async () => {
     try {
       const res = await axios.get(`${API_BASE_URL}/api/users/${userId}`, {
@@ -19,7 +19,7 @@ const ChatHeader = () => {
           Authorization: `Bearer ${token}`
         }
       })
-      console.log(res.data.data);
+      // console.log(res.data.data);
       setSelectedUser(res.data.data)
     } catch (error) {
       console.log(error.response);

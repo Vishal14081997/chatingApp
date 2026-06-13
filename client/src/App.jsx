@@ -81,7 +81,7 @@ const App = () => {
 
   return (
     <>
-      <SocketContext.Provider value={{ token, socketConnected, onlineUsers }}>
+      <SocketContext.Provider value={{ token, socketConnected, onlineUsers,socketRef }}>
         <Toaster position='top-right' />
         <RouterProvider router={router} />
       </SocketContext.Provider>

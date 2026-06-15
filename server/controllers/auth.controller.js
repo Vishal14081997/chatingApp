@@ -82,6 +82,8 @@ const updateProfile = async (req, res) => {
         if (req.email) {
             updateData.email = req.body.email
         }
+        console.log("image url", req.imageUrl);
+
         if (req.imageUrl) {
             updateData.profilePic = req.imageUrl
         }

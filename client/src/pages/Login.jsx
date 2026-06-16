@@ -3,12 +3,13 @@ import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { API_BASE_URL } from "../api/config"
 import { Link, useNavigate } from "react-router-dom";
+import { signInWithGoogle } from "../config/firebase"
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate()
-  
+
   const handleChange = (e) => {
     // console.log(e.target.name , e.target.value);
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -25,9 +26,9 @@ const Login = () => {
 
       const token = res.data.data.token;
       localStorage.setItem("token", token)
-      localStorage.setItem("user" ,JSON.stringify(res.data.data.user))
+      localStorage.setItem("user", JSON.stringify(res.data.data.user))
 
-     
+
       toast.success(res.data.message);
       setFormData({ email: "", password: "" });
       navigate("/chat")
@@ -38,6 +39,25 @@ const Login = () => {
       setLoading(false);
     }
   };
+  const handleGoogleLogin = async () => {
+    try {
+      const googleUser = await signInWithGoogle();
+      const res = await axios.post(`${API_BASE_URL}/api/googleLogin`, {
+        email: googleUser.email,
+        fullName: googleUser.displayName,
+        profilePic: googleUser.photoURL,
+        googleId: googleUser.uid,
+      })
+      const token = res.data.data.token;
+      localStorage.setItem("token", token)
+      localStorage.setItem("user", JSON.stringify(res.data.data.user))
+      
+      navigate("/chat")
+
+    } catch (error) {
+      console.log("google login error", error);
+    }
+  }
   return (
     <div className="h-screen flex flex-col bg-gray-200 items-center justify-center">
       <div className="bg-primary text-white py-6 flex flex-col items-center w-full">
@@ -90,7 +110,9 @@ const Login = () => {
           Don't have an account? ? <Link to={"/signup"} className="font-medium text-primary" >Sign up</Link>
         </p>
 
-        <button className="flex justify-center items-center border border-gray-500 rounded-full py-2">
+        <button
+          onClick={handleGoogleLogin}
+          className="flex justify-center items-center border border-gray-500 rounded-full py-2">
           <img
             src="https://www.google.com/favicon.ico"
             alt=""

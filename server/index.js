@@ -1,8 +1,11 @@
 const express = require("express")
 const dotenv = require("dotenv")
 const dbConnect = require("./config/db")
+
 const authRoute = require("./routes/auth.route")
 const messageRoute = require("./routes/message.route")
+const groupRoute = require("./routes/group.route")
+
 const cors = require("cors")
 const {initSocket} = require("./services/socket")
 
@@ -15,12 +18,13 @@ let PORT = process.env.PORT || 3000
 const app = express()
 const server = createServer(app)
 
-
 app.use(express.json())
 app.use(cors())
 
+
 app.use("/api", authRoute)
 app.use("/api", messageRoute)
+app.use("/api", groupRoute)
 
 app.get("/", (req, res) => {
   res.json({

@@ -14,10 +14,10 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app)
-console.log(auth);
+// console.log(auth);
 
 const googleProvider = new GoogleAuthProvider();
-console.log(googleProvider);
+// console.log(googleProvider);
 
 export const signInWithGoogle = async () => {
     const googleUser = await signInWithPopup(auth, googleProvider)

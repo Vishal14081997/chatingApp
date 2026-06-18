@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { API_BASE_URL } from "../api/config";
-import { useNavigate ,Link} from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import {signInWithGoogle} from '../config/firebase'
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -45,6 +46,25 @@ const SignUp = () => {
       setLoading(false);
     }
   };
+  const handleGoogleLogin = async () => {
+    try {
+      const googleUser = await signInWithGoogle();
+      const res = await axios.post(`${API_BASE_URL}/api/googleLogin`, {
+        email: googleUser.email,
+        fullName: googleUser.displayName,
+        profilePic: googleUser.photoURL,
+        googleId: googleUser.uid,
+      })
+      const token = res.data.data.token;
+      localStorage.setItem("token", token)
+      localStorage.setItem("user", JSON.stringify(res.data.data.user))
+
+      navigate("/chat")
+
+    } catch (error) {
+      console.log("google login error", error);
+    }
+  }
 
   return (
     <div className="h-screen flex flex-col bg-gray-200 items-center justify-center">
@@ -103,10 +123,10 @@ const SignUp = () => {
         </button>
 
         <p className="text-center text-[14px] text-gray-600">
-          Already have an account ? <Link className="font-medium text-primary" to={"/login"}>Sign in</Link> 
+          Already have an account ? <Link className="font-medium text-primary" to={"/login"}>Sign in</Link>
         </p>
 
-        <button className="flex justify-center items-center border border-gray-500 rounded-full py-2">
+        <button onClick={handleGoogleLogin} className="flex justify-center items-center border border-gray-500 rounded-full py-2">
           <img
             src="https://www.google.com/favicon.ico"
             alt=""

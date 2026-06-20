@@ -58,6 +58,64 @@ const login = async (req, res) => {
         res.status(500).json({ message: "server error" })
     }
 };
+
+// const signUp = async (req, res) => {
+//     try {
+//         const { fullName, email, password } = req.body;
+//         if (!fullName || !email || !password) {
+//             res.status(400).json({ message: "All fields are required" });
+//         }
+//         const user = await User.findOne({ where:{email:email} });
+//         if (user) {
+//             return res.status(400).json({ message: "user already exist" });
+//         }
+//         const newUser = await User.create({
+//             fullName,
+//             email,
+//             password,
+//         });
+//         res.status(201).json({
+//             message: "Account create successfully",
+//             data: newUser,
+//         });
+//     } catch (error) {
+//         console.log(error.message);
+//         res.status(500).json({ message: error.message });
+//     }
+// };
+// const login = async (req, res) => {
+//     try {
+//         const { email, password } = req.body;
+//         if (!email || !password) {
+//             return res.status(400).json({ message: "All fields are required" });
+//         }
+//         const user = await User.findOne({where:{email:email}});
+//         // console.log(user);
+//         if (!user) {
+//             return res.status(404).json({
+//                 message: "user not found"
+//             })
+//         }
+//         if (user.password !== password) {
+//             return res.status(400).json({ message: "password is increate" });
+//         }
+//         const payload = {
+//             userId: user._id,
+//             fullName: user.fullName,
+//             email: user.email,
+//         };
+//         const token = jwt.sign(payload, process.env.JWT_SECRET, {
+//             expiresIn: "365d",
+//         });
+
+//         res.status(200).json({
+//             message: "login successfully",
+//             data: { user, token },
+//         });
+//     } catch (error) {
+//         res.status(500).json({ message: "server error" })
+//     }
+// };
 const googleLogin = async (req, res) => {
     try {
         const { email, fullName, profilePic, googleId } = req.body;

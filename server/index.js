@@ -1,7 +1,7 @@
 const express = require("express")
 const dotenv = require("dotenv")
 const dbConnect = require("./config/db")
-const sequelize = require("./config/sqldb")
+// const sequelize = require("./config/sqldb")
 
 const authRoute = require("./routes/auth.route")
 const messageRoute = require("./routes/message.route")
@@ -36,10 +36,10 @@ app.get("/", (req, res) => {
 initSocket(server);
 
 server.listen(PORT, async() => {
-  await sequelize.authenticate();
-  console.log("database authenticate");
-  await sequelize.sync({alter:false});
-  console.log("table sync");
+  // await sequelize.authenticate();
+  // console.log("database authenticate");
+  // await sequelize.sync({alter:false});
+  // console.log("table sync");
   dbConnect()
   console.log(`server is running port ${PORT}`);
 })
